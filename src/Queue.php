@@ -269,7 +269,7 @@ final class Queue
             ], $options));
         } catch (RequestException $e) {
             throw new AsyncBaseError(
-                code: 'NETWORK_ERROR',
+                errorCode: 'NETWORK_ERROR',
                 message: $e->getMessage(),
             );
         }
@@ -292,7 +292,7 @@ final class Queue
             }
             $err = $data['error'] ?? [];
             throw new AsyncBaseError(
-                code: (string) ($err['code'] ?? 'UNKNOWN'),
+                errorCode: (string) ($err['code'] ?? 'UNKNOWN'),
                 message: (string) ($err['message'] ?? $res->getReasonPhrase()),
                 docs: (string) ($err['docs'] ?? ''),
                 status: $status,
@@ -304,7 +304,7 @@ final class Queue
             return json_decode($body, true, flags: JSON_THROW_ON_ERROR) ?? [];
         } catch (\JsonException $e) {
             throw new AsyncBaseError(
-                code: 'BAD_RESPONSE',
+                errorCode: 'BAD_RESPONSE',
                 message: 'Server returned invalid JSON: ' . $e->getMessage(),
                 status: $status,
             );
