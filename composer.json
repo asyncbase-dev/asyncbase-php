@@ -18,7 +18,10 @@
   "autoload": {
     "psr-4": {
       "AsyncBase\\": "src/"
-    }
+    },
+    "files": [
+      "src/Queue.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
