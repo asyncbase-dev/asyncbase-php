@@ -127,13 +127,48 @@ class AsyncBaseQueue extends BaseQueue implements QueueContract
         );
     }
 
-    // ─── size ─────────────────────────────────────────────────
-    // Laravel uses this for Horizon-style stats. AsyncBase doesn't have a
-    // dedicated stream-length endpoint yet — return 0 so Horizon doesn't crash.
-    // Override via a custom AsyncBaseQueue if you wire up /v1/queues/:name/stats.
+    // ─── size / stats ─────────────────────────────────────────
+    // Laravel 12's Queue contract adds per-state size probes for Horizon.
+    // AsyncBase doesn't expose those breakdowns yet (no /v1/queues/:name/stats),
+    // so all return 0. Override in a subclass once the stats endpoint lands.
+
     public function size($queue = null): int
     {
         return 0;
+    }
+
+    public function pendingSize($queue = null): int
+    {
+        return 0;
+    }
+
+    public function delayedSize($queue = null): int
+    {
+        return 0;
+    }
+
+    public function reservedSize($queue = null): int
+    {
+        return 0;
+    }
+
+    /**
+     * `php artisan queue:clear` — dangerous on a SaaS queue. Return 0 so it
+     * no-ops; users should delete the stream via the dashboard instead.
+     */
+    public function clear($queue): int
+    {
+        return 0;
+    }
+
+    /**
+     * Laravel's queue:monitor reads this to alert on stale jobs. AsyncBase
+     * doesn't expose an "oldest pending message" probe — returning null
+     * tells the monitor to skip the stale-threshold check.
+     */
+    public function creationTimeOfOldestPendingJob($queue = null): ?int
+    {
+        return null;
     }
 
     // ─── helpers ──────────────────────────────────────────────
