@@ -1,9 +1,9 @@
 {
   "name": "asyncbase/asyncbase",
-  "description": "AsyncBase PHP SDK — queue primitive client",
+  "description": "AsyncBase PHP SDK — queue primitive client + Laravel queue driver",
   "type": "library",
   "license": "MIT",
-  "keywords": ["queue", "async", "message-queue", "asyncbase", "sqs"],
+  "keywords": ["queue", "async", "message-queue", "asyncbase", "sqs", "laravel"],
   "homepage": "https://asyncbase.dev",
   "require": {
     "php": ">=8.1",
@@ -11,9 +11,16 @@
     "psr/log": "^3.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^12.3",
+    "friendsofphp/php-cs-fixer": "^3.64",
+    "illuminate/container": "^10.0 || ^11.0 || ^12.0",
+    "illuminate/contracts": "^10.0 || ^11.0 || ^12.0",
+    "illuminate/queue": "^10.0 || ^11.0 || ^12.0",
+    "illuminate/support": "^10.0 || ^11.0 || ^12.0",
     "phpstan/phpstan": "^2.0",
-    "friendsofphp/php-cs-fixer": "^3.64"
+    "phpunit/phpunit": "^12.3"
+  },
+  "suggest": {
+    "illuminate/queue": "Required to use the asyncbase queue driver (queue:work asyncbase)."
   },
   "autoload": {
     "psr-4": {
@@ -26,6 +33,13 @@
   "autoload-dev": {
     "psr-4": {
       "AsyncBase\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "AsyncBase\\Laravel\\AsyncBaseServiceProvider"
+      ]
     }
   },
   "scripts": {
