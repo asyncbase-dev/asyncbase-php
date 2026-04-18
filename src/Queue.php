@@ -35,6 +35,7 @@ final class Queue
         string $apiKey,
         ?string $baseUrl = null,
         float $timeout = 30.0,
+        ?\GuzzleHttp\HandlerStack $handler = null,
     ) {
         if ($apiKey === '' || !preg_match(self::API_KEY_RE, $apiKey)) {
             throw new \InvalidArgumentException(
@@ -43,13 +44,17 @@ final class Queue
         }
         $this->apiKey = $apiKey;
         $this->baseUrl = rtrim($baseUrl ?? self::DEFAULT_BASE_URL, '/');
-        $this->http = new HttpClient([
+        $clientConfig = [
             'base_uri' => $this->baseUrl,
             'timeout' => $timeout,
             'headers' => [
                 'Authorization' => 'Bearer ' . $this->apiKey,
             ],
-        ]);
+        ];
+        if ($handler !== null) {
+            $clientConfig['handler'] = $handler;
+        }
+        $this->http = new HttpClient($clientConfig);
     }
 
     /**
